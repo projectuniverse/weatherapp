@@ -5,11 +5,12 @@ import com.codecamp.weatherapp.network.WeatherApiService
 import kotlinx.coroutines.flow.first
 
 interface WeatherRepository {
-    suspend fun getOnlineWeather(): Weather
+    suspend fun getOnlineWeather(
+        latitude: Double,
+        longitude: Double
+    ): Weather
     suspend fun getOfflineWeather(): Weather?
 }
-
-//TODO Change to real coordinates, let coordinates be passed as arguments!
 
 @kotlinx.serialization.ExperimentalSerializationApi
 class DefaultWeatherRepository(
@@ -17,8 +18,11 @@ class DefaultWeatherRepository(
     private val weatherDao: WeatherDao
     ) : WeatherRepository {
 
-    override suspend fun getOnlineWeather(): Weather {
-        val deserializedWeather = weatherApiService.getWeather(51.31, 9.48)
+    override suspend fun getOnlineWeather(
+        latitude: Double,
+        longitude: Double
+    ): Weather {
+        val deserializedWeather = weatherApiService.getWeather(latitude, longitude)
         val weather = Weather(
             weatherType = deserializedWeather.weather[0].main,
             temperature = deserializedWeather.main.temp,

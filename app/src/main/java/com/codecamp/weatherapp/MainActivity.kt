@@ -10,12 +10,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codecamp.weatherapp.ui.WeatherApp
 import com.codecamp.weatherapp.ui.screens.WeatherViewModel
 import com.codecamp.weatherapp.ui.theme.WeatherAppTheme
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +27,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             WeatherAppTheme {
+                val fusedLocationClient = LocationServices.getFusedLocationProviderClient(LocalContext.current)
                 val viewModel: WeatherViewModel = viewModel(factory = WeatherViewModel.Factory)
+                viewModel.getWeather(fusedLocationClient)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    WeatherApp(viewModel)
+                    WeatherApp(
+                        viewModel
+                    )
                 }
             }
         }

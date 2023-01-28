@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
@@ -35,7 +36,6 @@ enum class AppScreen(@StringRes val title: Int) {
 fun WeatherApp(
     weatherViewModel: WeatherViewModel,
     navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = AppScreen.valueOf(
@@ -43,7 +43,7 @@ fun WeatherApp(
     )
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBarTop(
                 currentScreen = currentScreen
@@ -149,6 +149,7 @@ fun AppBarBottom(
                 else {
                     navController.navigate(AppScreen.Weather.name)
                 } },
+            shape = RoundedCornerShape(10.dp),
             modifier = Modifier.padding(bottom = 50.dp)
         ) {
             Text(

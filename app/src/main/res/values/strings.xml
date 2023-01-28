@@ -10,4 +10,24 @@
     <string name="error_message">Ooops! There seems to be no internet connection and no current offline weather data.</string>
     <string name="metric">Metric</string>
     <string name="imperial">Imperial</string>
+
+    <string-array name="sensorNames">
+        <item>Ambient Air Temperature</item>
+        <item>Illuminance</item>
+        <item>Ambient Air Pressure</item>
+        <item>Ambient Relative Humidity</item>
+    </string-array>
+    <string-array name="sensorUnits">
+        <item>°C</item>
+        <item>lx</item>
+        <item>hPa</item>
+        <item>%</item>
+    </string-array>
+    <string-array name="otherUnits">
+        <item>°C</item>
+        <item>°F</item>
+        <item>km/h</item>
+        <item>mph</item>
+    </string-array>
+
 </resources>
