@@ -1,0 +1,20 @@
+package com.codecamp.weatherapp.data
+
+import androidx.room.*
+import com.codecamp.weatherapp.model.Weather
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface WeatherDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(weather: Weather)
+
+    @Update
+    suspend fun update(weather: Weather)
+
+    @Query("SELECT * FROM weather WHERE id = :id")
+    fun getWeather(id: Int): Flow<Weather>
+
+    @Query("SELECT EXISTS(SELECT * FROM weather)")
+    fun weatherExists(): Flow<Boolean>
+}
