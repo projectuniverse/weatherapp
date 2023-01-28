@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">weather app</string>
+    <string name="weather">Weather</string>
+    <string name="sensors">Sensors</string>
+    <string name="turn_on_light_mode">Turn on light mode</string>
+    <string name="turn_on_dark_mode">Turn on dark mode</string>
+    <string name="degree_celsius">\u2103</string>
+    <string name="degree_fahrenheit">\u2109</string>
+    <string name="loading">Loading...</string>
+    <string name="error_message">Ooops! There seems to be no internet connection and no current offline weather data.</string>
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
 </resources>
