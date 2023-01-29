@@ -6,6 +6,7 @@ import android.location.LocationRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -32,46 +33,58 @@ class WeatherViewModel(
     var weatherUiState: WeatherUiState by mutableStateOf(WeatherUiState.Loading)
         private set
 
+    val succededLocation: MutableLiveData<Location> by lazy{ MutableLiveData<Location>() }
     /*
     init {
         getWeather(fusedLocationClient)
     }
     */
+    @SuppressLint("MissingPermission")
+    fun getLocation(
+        fusedLocationClient: FusedLocationProviderClient
+    ) {
+        val currentLocation = Location("")
+        fusedLocationClient
+            .getCurrentLocation(LocationRequest.QUALITY_BALANCED_POWER_ACCURACY, null)
+            .addOnSuccessListener { location: Location? ->
+                if (location == null) {
+                    throw IOException()
+                }
+                else {
+                    currentLocation.latitude = location.latitude
+                    currentLocation.longitude = location.longitude
+                }
+
+                succededLocation.value = currentLocation
+
+            }
+    }
+
+    fun getDefaultLocation(): Location {
+        val loc = Location("")
+        loc.latitude = 0.0
+        loc.longitude = 0.0
+        return loc
+    }
 
     //TODO: Sollte private sein oder nicht? Nur einmal aufrufen bei init?
     //TODO: Änder der Parameter den du getWeather übergibst zur tatsächlichen location
-    @SuppressLint("MissingPermission")
-    fun getWeather(
-        fusedLocationClient: FusedLocationProviderClient
-    ) {
+    fun getWeather(currentLocation: Location) {
         viewModelScope.launch {
-            weatherUiState = try {
-                var currentLocation: Location = Location("")
-                fusedLocationClient
-                    .getCurrentLocation(LocationRequest.QUALITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener { location: Location? ->
-                        if (location == null) {
-                            throw IOException()
-                        }
-                        else {
-                            currentLocation.latitude = location.latitude
-                            currentLocation.longitude = location.longitude
-                        }
-
-                    }
-                val result = weatherRepository.getOnlineWeather(
-                    51.31,
-                    9.48
-                    /*
-                    currentLocation.latitude,
-                    currentLocation.longitude
-                     */
-                )
-                WeatherUiState.Success(result)
-            } catch (e: IOException) {
+            if(currentLocation.latitude == 0.0 && currentLocation.longitude == 0.0) {
                 setErrorSate()
-            } catch (e: HttpException) {
-                setErrorSate()
+            } else {
+                weatherUiState = try {
+                    val result = weatherRepository.getOnlineWeather(
+                        currentLocation.latitude,
+                        currentLocation.longitude
+                    )
+                    WeatherUiState.Success(result)
+                } catch (e: IOException) {
+                    setErrorSate()
+                } catch (e: HttpException) {
+                    setErrorSate()
+                }
             }
         }
     }

@@ -3,14 +3,16 @@ package com.codecamp.weatherapp
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,19 +26,33 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         checkPermissions()
-
+        val TAG = "MYTAG"
         setContent {
             WeatherAppTheme {
                 val fusedLocationClient = LocationServices.getFusedLocationProviderClient(LocalContext.current)
                 val viewModel: WeatherViewModel = viewModel(factory = WeatherViewModel.Factory)
-                viewModel.getWeather(fusedLocationClient)
+                viewModel.getLocation(fusedLocationClient)
+
+                var currentLocation by remember {
+                    mutableStateOf(viewModel.getDefaultLocation())
+                }
+
+                viewModel.succededLocation.observe(LocalLifecycleOwner.current) {
+                    if (currentLocation != it) {
+                        currentLocation = it
+                        Log.d(TAG, "onCreate: $it")
+                        viewModel.getWeather(currentLocation)
+                    }
+                }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     WeatherApp(
-                        viewModel
+                        viewModel,
+                        currentLocation
                     )
                 }
             }
