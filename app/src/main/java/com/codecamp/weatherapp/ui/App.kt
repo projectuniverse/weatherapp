@@ -1,5 +1,6 @@
 package com.codecamp.weatherapp.ui
 
+import android.location.Location
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,8 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,12 +35,15 @@ enum class AppScreen(@StringRes val title: Int) {
 @Composable
 fun WeatherApp(
     weatherViewModel: WeatherViewModel,
+    currentLocation: Location,
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = AppScreen.valueOf(
         backStackEntry?.destination?.route ?: AppScreen.Weather.name
     )
+
+    weatherViewModel.getWeather(currentLocation)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
