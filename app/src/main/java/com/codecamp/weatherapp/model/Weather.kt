@@ -5,6 +5,9 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/*
+ * Acts as the data stored in the Room database
+ */
 @Entity(tableName = "weather")
 data class Weather(
     @PrimaryKey

@@ -4,6 +4,9 @@ import com.codecamp.weatherapp.model.Weather
 import com.codecamp.weatherapp.network.WeatherApiService
 import kotlinx.coroutines.flow.first
 
+/*
+ * Acts as a single source of truth. Returns online and offline weather.
+ */
 interface WeatherRepository {
     suspend fun getOnlineWeather(
         latitude: Double,

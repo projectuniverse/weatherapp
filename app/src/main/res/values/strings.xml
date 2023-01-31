@@ -7,7 +7,7 @@
     <string name="degree_celsius">\u2103</string>
     <string name="degree_fahrenheit">\u2109</string>
     <string name="loading">Loading...</string>
-    <string name="error_message">Ooops! There seems to be no internet connection and no current offline weather data.</string>
+    <string name="error_message">Ooops! There seems to be no location or no internet connection and no current offline weather data.</string>
     <string name="metric">Metric</string>
     <string name="imperial">Imperial</string>
 
