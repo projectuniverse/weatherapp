@@ -4,6 +4,9 @@ import androidx.room.*
 import com.codecamp.weatherapp.model.Weather
 import kotlinx.coroutines.flow.Flow
 
+/*
+ * Makes the requests to the Room database
+ */
 @Dao
 interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)

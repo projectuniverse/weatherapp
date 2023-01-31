@@ -6,6 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.codecamp.weatherapp.model.Weather
 
+/*
+ * Acts as the Room database for offline weather
+ */
 @Database(entities = [Weather::class], version = 4, exportSchema = false)
 abstract class WeatherDatabase : RoomDatabase() {
     abstract fun weatherDao(): WeatherDao
