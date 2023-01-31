@@ -34,11 +34,7 @@ class WeatherViewModel(
         private set
 
     val succededLocation: MutableLiveData<Location> by lazy{ MutableLiveData<Location>() }
-    /*
-    init {
-        getWeather(fusedLocationClient)
-    }
-    */
+
     @SuppressLint("MissingPermission")
     fun getLocation(
         fusedLocationClient: FusedLocationProviderClient
@@ -67,8 +63,7 @@ class WeatherViewModel(
         return loc
     }
 
-    //TODO: Sollte private sein oder nicht? Nur einmal aufrufen bei init?
-    //TODO: Änder der Parameter den du getWeather übergibst zur tatsächlichen location
+
     fun getWeather(currentLocation: Location) {
         viewModelScope.launch {
             if(currentLocation.latitude == 0.0 && currentLocation.longitude == 0.0) {
