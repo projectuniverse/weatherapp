@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         checkPermissions()
-        val TAG = "MYTAG"
         setContent {
             WeatherAppTheme {
                 val fusedLocationClient = LocationServices.getFusedLocationProviderClient(LocalContext.current)
@@ -40,7 +39,6 @@ class MainActivity : ComponentActivity() {
                 viewModel.succededLocation.observe(LocalLifecycleOwner.current) {
                     if (currentLocation != it) {
                         currentLocation = it
-                        Log.d(TAG, "onCreate: $it")
                         viewModel.getWeather(currentLocation)
                     }
                 }
