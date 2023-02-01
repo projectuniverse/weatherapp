@@ -35,15 +35,12 @@ enum class AppScreen(@StringRes val title: Int) {
 @Composable
 fun WeatherApp(
     weatherViewModel: WeatherViewModel,
-    currentLocation: Location,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = AppScreen.valueOf(
         backStackEntry?.destination?.route ?: AppScreen.Weather.name
     )
-
-    weatherViewModel.getWeather(currentLocation)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

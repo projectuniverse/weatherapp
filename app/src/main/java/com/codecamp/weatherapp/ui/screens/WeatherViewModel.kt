@@ -6,7 +6,6 @@ import android.location.LocationRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -33,8 +32,6 @@ class WeatherViewModel(
     var weatherUiState: WeatherUiState by mutableStateOf(WeatherUiState.Loading)
         private set
 
-    val succededLocation: MutableLiveData<Location> by lazy{ MutableLiveData<Location>() }
-
     @SuppressLint("MissingPermission")
     fun getLocation(
         fusedLocationClient: FusedLocationProviderClient
@@ -44,15 +41,13 @@ class WeatherViewModel(
             .getCurrentLocation(LocationRequest.QUALITY_BALANCED_POWER_ACCURACY, null)
             .addOnSuccessListener { location: Location? ->
                 if (location == null) {
-                    throw IOException()
+                    getWeather(getDefaultLocation())
                 }
                 else {
                     currentLocation.latitude = location.latitude
                     currentLocation.longitude = location.longitude
+                    getWeather(currentLocation)
                 }
-
-                succededLocation.value = currentLocation
-
             }
     }
 
@@ -63,24 +58,25 @@ class WeatherViewModel(
         return loc
     }
 
-
     fun getWeather(currentLocation: Location) {
         viewModelScope.launch {
-            if(currentLocation.latitude == 0.0 && currentLocation.longitude == 0.0) {
-                setErrorSate()
-            } else {
-                weatherUiState = try {
-                    val result = weatherRepository.getOnlineWeather(
-                        currentLocation.latitude,
-                        currentLocation.longitude
-                    )
-                    WeatherUiState.Success(result)
-                } catch (e: IOException) {
-                    setErrorSate()
-                } catch (e: HttpException) {
+            weatherUiState =
+                if (currentLocation.latitude == 0.0 && currentLocation.longitude == 0.0) {
                     setErrorSate()
                 }
-            }
+                else {
+                    try {
+                        val result = weatherRepository.getOnlineWeather(
+                            currentLocation.latitude,
+                            currentLocation.longitude
+                        )
+                        WeatherUiState.Success(result)
+                    } catch (e: IOException) {
+                        setErrorSate()
+                    } catch (e: HttpException) {
+                        setErrorSate()
+                    }
+                }
         }
     }
 

@@ -32,25 +32,13 @@ class MainActivity : ComponentActivity() {
                 val viewModel: WeatherViewModel = viewModel(factory = WeatherViewModel.Factory)
                 viewModel.getLocation(fusedLocationClient)
 
-                var currentLocation by remember {
-                    mutableStateOf(viewModel.getDefaultLocation())
-                }
-
-                viewModel.succededLocation.observe(LocalLifecycleOwner.current) {
-                    if (currentLocation != it) {
-                        currentLocation = it
-                        viewModel.getWeather(currentLocation)
-                    }
-                }
-
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     WeatherApp(
-                        viewModel,
-                        currentLocation
+                        viewModel
                     )
                 }
             }
