@@ -1,5 +1,6 @@
 package com.codecamp.weatherapp.network
 
+import com.codecamp.weatherapp.BuildConfig
 import com.codecamp.weatherapp.model.DeserializedWeather
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,6 +13,6 @@ interface WeatherApiService {
     suspend fun getWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("appid") appid: String = "Insert your API key"
+        @Query("appid") appid: String = BuildConfig.OPEN_WEATHER_API_KEY
     ): DeserializedWeather
 }
